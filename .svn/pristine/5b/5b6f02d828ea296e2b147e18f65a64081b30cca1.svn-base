@@ -1,0 +1,31 @@
+{
+  "name": "generator-yeoman-timwe-angular",
+  "version": "0.0.0",
+  "description": "Yeoman generator",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": "fateicha/generator-yeoman-timwe-angular",
+  "author": {
+    "name": "André Luz Fatia",
+    "email": "alfatia10@gmail.com",
+    "url": "https://github.com/Fateicha"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "chalk": "^1.0.0",
+    "fs-extra": "^0.18.2",
+    "yeoman-generator": "^0.19.0",
+    "yosay": "^1.0.2"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}

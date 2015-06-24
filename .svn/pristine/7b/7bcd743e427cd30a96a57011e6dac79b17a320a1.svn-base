@@ -1,0 +1,9 @@
+/**
+ * Created by andre.fatia on 19/03/2015.
+ */
+(function(){
+    'use strict';
+
+    angular
+        .module('app.widgets', []);
+})();

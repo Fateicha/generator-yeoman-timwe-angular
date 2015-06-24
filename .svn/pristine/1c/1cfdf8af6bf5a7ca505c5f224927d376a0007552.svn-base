@@ -1,0 +1,5 @@
+<% if (ionic) { %>$ionicons-font-path: '../../vendor/ionic/release/fonts' !default;<% } %>
+
+//@import "gloabals/variables";
+
+<% if (ionic) { %>@import "../../vendor/ionic/scss/ionic";<% } %>

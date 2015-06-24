@@ -1,0 +1,11 @@
+/**
+ * Created by andre.fatia on 17/03/2015.
+ */
+(function(){
+    'use strict';
+
+    angular
+        .module('app.layout', [
+            'app.core'
+        ]);
+})();

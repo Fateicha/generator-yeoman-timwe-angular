@@ -1,0 +1,18 @@
+{
+  "env": "dev",
+  "settings": {
+    "deviceId" : "486",
+    "channelId": "908",
+    "viewId": "367868",
+    "typeId": "8",
+    "clubId": "41162",
+    "countryId": "90",
+    "featuredCategory": "",
+    "hiddenCategories": "",
+    "slideshowMedias": "",
+    "sessionId": "",
+    "clientIp": "",
+    "trackingId": "1999",
+    "subId": ""
+  }
+}

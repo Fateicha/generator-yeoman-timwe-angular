@@ -1,0 +1,24 @@
+/**
+ * Created by andre.fatia on 17/03/2015.
+ */
+(function(){
+    'use strict';
+
+    angular
+        .module('app.layout')
+        .controller('ShellController', ShellController);
+
+    
+    //ShellController.$inject = [];
+
+    /* @ngInject */
+    function ShellController() {
+        /* jshint validthis: true */
+        var vm = this;
+
+        activated();
+
+        function activated(){}
+    }
+
+})();
