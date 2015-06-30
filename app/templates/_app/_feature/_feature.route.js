@@ -1,6 +1,3 @@
-/**
- * Created by andre.fatia on 24/03/2015.
- */
 (function() {
     'use strict';
 

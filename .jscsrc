@@ -1,0 +1,9 @@
+{
+  "preset": "google",
+  "validateIndentation": 4,
+  "disallowMixedSpacesAndTabs": true,
+  "maximumLineLength": 150,
+  "validateLineBreaks": "LF",
+  "excludeFiles": ["node_modules/**"],
+  "disallowTrailingWhitespace": "ignoreEmptyLines"
+}

@@ -1,4 +1,3 @@
-'use strict';
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
@@ -38,14 +37,14 @@ module.exports = yeoman.Base.extend({
             default: true
         },{
             when: function(props){
-                return props.proxy
+                return props.proxy;
             },
             type: 'input',
             name: 'apiUrl',
             message: 'What\'s the pretended API URL to configure with the proxy?'
         },{
             when: function(props){
-                return props.proxy
+                return props.proxy;
             },
             type: 'confirm',
             name: 'appSettings',
@@ -63,7 +62,7 @@ module.exports = yeoman.Base.extend({
             this.props = props;
 
             this.context = {
-                appName: this.props.appName,
+                appName: (this.props.appName).split(' ').join('-'),
                 ionic: this.props.ionic,
                 proxy: this.props.proxy,
                 apiUrl: this.props.apiUrl || null,
@@ -77,7 +76,6 @@ module.exports = yeoman.Base.extend({
 
     writing: {
         app: function () {
-            console.log(this.context);
             /**
              * /src
              */
@@ -94,7 +92,6 @@ module.exports = yeoman.Base.extend({
                     this.context
                 );
             }
-
             /**
              * /src/app
              */
@@ -109,12 +106,6 @@ module.exports = yeoman.Base.extend({
                 this.destinationPath('src/app/app.module.js'),
                 this.context
             );
-
-            /**
-             * /src/app/blocks
-             */
-            _fs.mkdirs('src/app/blocks');
-
             /**
              * /src/app/core
              */
@@ -129,14 +120,9 @@ module.exports = yeoman.Base.extend({
                 this.context
             );
             this.fs.copy(
-                this.templatePath('_app/_core/_core.route.js'),
-                this.destinationPath('src/app/core/core.routes.js')
-            );
-            this.fs.copy(
                 this.templatePath('_app/_core/_dataService.js'),
                 this.destinationPath('src/app/core/dataService.js')
             );
-
             /**
              * /src/app/feature
              */
@@ -164,6 +150,10 @@ module.exports = yeoman.Base.extend({
                 this.destinationPath('src/app/layout/layout.module.js')
             );
             this.fs.copy(
+                this.templatePath('_app/_layout/_shell.route.js'),
+                this.destinationPath('src/app/layout/shell.route.js')
+            );
+            this.fs.copy(
                 this.templatePath('_app/_layout/_shell.controller.js'),
                 this.destinationPath('src/app/layout/shell.controller.js')
             );
@@ -171,10 +161,6 @@ module.exports = yeoman.Base.extend({
                 this.templatePath('_app/_layout/_shell.html'),
                 this.destinationPath('src/app/layout/shell.html'),
                 this.context
-            );
-            this.fs.copy(
-                this.templatePath('_app/_layout/_error.html'),
-                this.destinationPath('src/app/layout/error.html')
             );
 
             /**
@@ -185,14 +171,17 @@ module.exports = yeoman.Base.extend({
                 this.destinationPath('src/app/widgets/widgets.module.js')
             );
             this.fs.copy(
-                this.templatePath('_app/_widgets/_someWidget.js'),
-                this.destinationPath('src/app/widgets/someWidget.js')
+                this.templatePath('_app/_widgets/someWidget/_someWidget.js'),
+                this.destinationPath('src/app/widgets/someWidget/someWidget.js')
             );
             this.fs.copy(
-                this.templatePath('_app/_widgets/_someWidget.html'),
-                this.destinationPath('src/app/widgets/_someWidget.html')
+                this.templatePath('_app/_widgets/someWidget/_someWidget.html'),
+                this.destinationPath('src/app/widgets/someWidget/someWidget.html')
             );
-
+            /**
+             * /src/vendors
+             */
+            _fs.mkdirs('src/vendor');
             /**
              * /src/assets/sass
              */
@@ -206,9 +195,10 @@ module.exports = yeoman.Base.extend({
             _fs.mkdirs('src/assets/sass/widgets');
         },
         projectfiles: function () {
-            this.fs.copy(
+            this.fs.copyTpl(
                 this.templatePath('_package.json'),
-                this.destinationPath('package.json')
+                this.destinationPath('package.json'),
+                this.context
             );
             this.fs.copyTpl(
                 this.templatePath('_bower.json'),
@@ -216,12 +206,12 @@ module.exports = yeoman.Base.extend({
                 this.context
             );
             this.fs.copy(
-                this.templatePath('.editorconfig'),
-                this.destinationPath('..editorconfig')
+                this.templatePath('_.editorconfig'),
+                this.destinationPath('.editorconfig')
             );
             this.fs.copy(
-                this.templatePath('.jshintrc'),
-                this.destinationPath('..jshintrc')
+                this.templatePath('_.jshintrc'),
+                this.destinationPath('.jshintrc')
             );
             this.fs.copy(
                 this.templatePath('_gulpfile.js'),
@@ -250,7 +240,7 @@ module.exports = yeoman.Base.extend({
     },
 
     end: function() {
-        if (this.props.appSettings){
+        if (this.props.appSettings) {
             this.log(yosay('The application was ' + chalk.green('builded with success! \n')) +
                 chalk.yellow(' Note: ') +
                 'You should check defaults.settings.json and app.settings.js to match your backend configuration.'

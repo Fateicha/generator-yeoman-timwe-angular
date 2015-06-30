@@ -1,14 +1,10 @@
-/**
- * Created by andre.fatia on 19/03/2015.
- */
 (function() {
     'use strict';
 
     angular
-        .module('app.core')
+        .module('app.layout')
         .config(route);
 
-    route.$inject = ['$urlRouterProvider', '$stateProvider'];
     /* @ngInject */
     function route($urlRouterProvider, $stateProvider) {
         $urlRouterProvider
@@ -21,12 +17,5 @@
                 templateUrl: 'app/layout/shell.html',
                 controller: 'ShellController as vm'
             });
-        
-        $stateProvider
-            .state('error', {
-                templateUrl: 'app/layout/error.html',
-                title: 'BAD CONNECTION'
-            });
-
     }
 })();

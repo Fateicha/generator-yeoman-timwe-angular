@@ -20,7 +20,6 @@
     <% if (ionic) { %><ion-nav-view></ion-nav-view><% } %>
     <% if (!ionic) { %><ui-view></ui-view><% } %>
 
-
     <!-- inject-vendor:js -->
     <script src="vendor/lodash/lodash.js"></script>
     <script src="vendor/angular/angular.js"></script>
@@ -37,15 +36,15 @@
     <script src="app/app.module.js"></script>
     <!-- core module -->
     <script src="app/core/core.module.js"></script>
-    <script src="app/core/core.route.js"></script>
     <script src="app/core/config.js"></script>
     <script src="app/core/dataService.js"></script>
     <!-- layout -->
     <script src="app/layout/layout.module.js"></script>
+    <script src="app/layout/shell.route.js"></script>
     <script src="app/layout/shell.controller.js"></script>
     <!-- components -->
     <script src="app/widgets/widgets.module.js"></script>
-    <script src="app/widgets/someWidget.js"></script>
+    <script src="app/widgets/someWidget/someWidget.js"></script>
     <!-- feature -->
     <script src="app/feature/feature.module.js"></script>
     <script src="app/feature/feature.route.js"></script>

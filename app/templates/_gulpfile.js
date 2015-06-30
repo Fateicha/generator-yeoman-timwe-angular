@@ -1,10 +1,12 @@
-var gulp = require('gulp'),
-    del = require('del'),
-    plugins = require('gulp-load-plugins')(),
-    browserSync = require('browser-sync'),
-    reload      = browserSync.reload,
-    log = plugins.util.log,
-    config = require('./gulp.config.json');
+var gulp = require('gulp');
+var del = require('del');
+var plugins = require('gulp-load-plugins')();
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
+var log = plugins.util.log;
+var purify = require('gulp-purifycss');
+var config = require('./gulp.config.json');
+var stripDebug = require('gulp-strip-debug');
 // ---------------------------------------------------------------------
 // | Helper tasks                                                      |
 // ---------------------------------------------------------------------
@@ -16,6 +18,7 @@ gulp.task('js', ['templatecache'], function() {
     log('Bundling, minifying, and copying the app\'s JavaScript');
 
     return gulp.src(config.js)
+        .pipe(stripDebug())
         .pipe(plugins.sourcemaps.init())
         .pipe(plugins.concat('all.min.js'))
         .pipe(plugins.ngAnnotate({
@@ -39,10 +42,12 @@ gulp.task('vendorjs', function() {
     log('Bundling, minifying, and copying the Vendor JavaScript');
 
     return gulp.src(config.vendorjs)
+        .pipe(plugins.sourcemaps.init())
         .pipe(plugins.concat('vendor.min.js'))
         .pipe(plugins.bytediff.start())
         .pipe(plugins.uglify())
         .pipe(plugins.bytediff.stop(bytediffFormatter))
+        .pipe(plugins.sourcemaps.write())
         .pipe(gulp.dest(config.assets));
 });
 
@@ -50,7 +55,7 @@ gulp.task('vendorjs', function() {
  * Convert SASS to CSS
  * @return {Stream}
  */
-gulp.task('sass', function () {
+gulp.task('sass', function() {
     log('Converting SASS to CSS');
     return gulp.src(config.src + 'assets/sass/*.scss')
         .pipe(plugins.sass())
@@ -65,14 +70,22 @@ gulp.task('sass', function () {
 gulp.task('css', ['sass'], function() {
     log('Bundling, minifying, and copying the app\'s CSS');
 
+    var vendorsjs = config.vendorjs;
+    var appjs = vendorsjs.concat(config.js);
+    var filesToPurify = appjs.concat(config.html);
+
+    log('Files to Purify:', filesToPurify);
+
     return gulp.src(config.src + 'assets/css/*.css')
-        .pipe(plugins.sourcemaps.init())
-        .pipe(plugins.concat('all.min.css'))
+        //.pipe(plugins.sourcemaps.init())
         .pipe(plugins.bytediff.start())
+        //Problem with directives csslog(filesToPurify)
+        .pipe(purify(filesToPurify))
         .pipe(plugins.csso())
+        .pipe(plugins.concat('all.min.css'))
         .pipe(plugins.bytediff.stop(bytediffFormatter))
-        .pipe(plugins.sourcemaps.write())
-        .pipe(gulp.dest(config.assets));
+        //.pipe(plugins.sourcemaps.write())
+        .pipe(gulp.dest(config.assets + 'css/'));
 });
 
 /**
@@ -89,7 +102,7 @@ gulp.task('vendorcss', function() {
         .pipe(plugins.bytediff.start())
         .pipe(plugins.csso())
         .pipe(plugins.bytediff.stop(bytediffFormatter))
-        .pipe(gulp.dest(config.assets));
+        .pipe(gulp.dest(config.assets + 'css/'));
 });
 
 /**
@@ -118,7 +131,7 @@ gulp.task('templatecache', function() {
 /**
  *  Copy all necessary files which don't need extra processing
  */
-gulp.task('copy:misc', function () {
+gulp.task('copy:misc', function() {
     return gulp.src([
 
         // Copy all files
@@ -142,7 +155,7 @@ gulp.task('copy:misc', function () {
 /**
  * Copy .htaccess from npm package
  */
-gulp.task('copy:.htaccess', function () {
+gulp.task('copy:.htaccess', function() {
     return gulp.src('node_modules/apache-server-configs/dist/.htaccess')
         .pipe(plugins.replace(/# ErrorDocument/g, 'ErrorDocument'))
         .pipe(gulp.dest(config.build));
@@ -154,23 +167,24 @@ gulp.task('copy:.htaccess', function () {
  */
 gulp.task('images', function() {
     log('Compressing, caching, and copying images');
+    console.log(config.images);
     return gulp
         .src(config.images)
         .pipe(plugins.cache(plugins.imagemin({
             optimizationLevel: 3
         })))
-        .pipe(gulp.dest(config.build + 'assets/img'));
+        .pipe(gulp.dest(config.assets + 'img'));
 });
 
 /**
- * Copy _fonts
+ * Copy fonts
  */
 gulp.task('fonts', function() {
     log('Copying necessary font packs.');
     console.log(config.fonts);
     return gulp
         .src(config.fonts)
-        .pipe(gulp.dest(config.build + '/fonts'));
+        .pipe(gulp.dest(config.assets + '/fonts'));
 });
 
 /**
@@ -194,8 +208,8 @@ gulp.task('rev-and-inject', ['js', 'vendorjs', 'css', 'vendorcss'], function() {
 
         // inject the files into index.html
         .pipe(indexFilter) // filter to index.html
-        .pipe(inject('assets/vendor.min.css', 'inject-vendor'))
-        .pipe(inject('assets/all.min.css'))
+        //.pipe(inject('assets/css/vendor.min.css', 'inject-vendor'))
+        .pipe(inject('assets/css/all.min.css'))
         .pipe(inject('assets/vendor.min.js', 'inject-vendor'))
         .pipe(inject('assets/all.min.js'))
         .pipe(inject('assets/templates.js', 'inject-templates'))
@@ -212,21 +226,23 @@ gulp.task('rev-and-inject', ['js', 'vendorjs', 'css', 'vendorcss'], function() {
     function inject(path, name) {
         var pathGlob = config.build + path;
         var options = {
-            ignorePath: config.build.substring(1),
-            read: false
+            ignorePath: config.build,
+            read: false,
+            addRootSlash: false
         };
+
         if (name) {
             options.name = name;
         }
+
         return plugins.inject(gulp.src(pathGlob), options);
     }
 });
 
-
 // ---------------------------------------------------------------------
 // | Main tasks
 // ---------------------------------------------------------------------
-gulp.task('watch', ['sass'], function() {
+gulp.task('watch', function() {
     var configServer = {
             proxy: config.proxy,
             ghostMode: {
@@ -245,7 +261,7 @@ gulp.task('watch', ['sass'], function() {
 
     gulp.watch(sass, ['sass']).on('change', reload);
 
-    gulp.watch(config.src  + '**/*.html').on('change', reload);
+    gulp.watch(config.src + '**/*.html').on('change', reload);
 });
 
 /**
@@ -264,7 +280,19 @@ gulp.task('build', ['rev-and-inject', 'images', 'fonts', 'copy:.htaccess', 'copy
  */
 gulp.task('clean', function(cb) {
     log('Cleaning: ' + plugins.util.colors.blue(config.build));
+    plugins.cache.clearAll();
     del(config.build, cb);
+});
+
+/**
+ * Karma Test
+ */
+gulp.task('test', function() {
+    return gulp.src('./fake')// loaded at karma.config.js
+        .pipe(plugins.karma({
+            configFile: 'karma.config.js',
+            action: 'watch'
+        }))
 });
 
 // ---------------------------------------------------------------------

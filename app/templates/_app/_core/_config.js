@@ -1,6 +1,3 @@
-/**
- * Created by andre.fatia on 16/03/2015.
- */
 (function(){
     'use strict';
 
@@ -9,7 +6,6 @@
         <% if (proxy) { %>.constant('proxy', 'proxy.php')<% } %>
         .constant('_', window._);
 
-    config.$inject = ['$httpProvider'];
     /* @ngInject */
     function config($httpProvider){
 

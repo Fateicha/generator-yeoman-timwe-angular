@@ -1,6 +1,3 @@
-/**
- * Created by andre.fatia on 19/03/2015.
- */
 (function(){
     'use strict';
 
@@ -8,7 +5,6 @@
         .module('app.core')
         .factory('dataService', dataService);
 
-    dataService.$inject = ['$http'];
     /* @ngInject */
     function dataService($http) {
         return {

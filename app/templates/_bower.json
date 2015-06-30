@@ -1,13 +1,12 @@
 {
-  "name": "package",
+  "name": "<%= appName %>",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "1.3.6",
-    "lodash": "~3.6.0",
-    "angular-ui-router": "0.2.13",
-    "angular": "1.3.6",
-    "angular-sanitize": "1.3.6",
-    "angular-animate": "1.3.6"
-    <% if (ionic) { %>,"ionic": "1.0.0-rc.3"<% } %>
+    "lodash": "3.9.3",
+    "angular": "1.3.13",
+    "angular-animate": "1.3.13",
+    "angular-sanitize": "1.3.13",
+    "angular-ui-router": "0.2.13"
+    <% if (ionic) { %>,"ionic": "1.0.0"<% } %>
   }
 }
