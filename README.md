@@ -1,4 +1,4 @@
-# generator-yeoman-timwe-angular [![Build Status](https://secure.travis-ci.org/fateicha/generator-yeoman-timwe-angular.png?branch=master)](https://travis-ci.org/fateicha/generator-yeoman-timwe-angular)
+# generator-yeoman-timwe-angular ![Build Status] (https://travis-ci.org/Fateicha/generator-yeoman-timwe-angular.svg?branch=master)
 
 > [Yeoman](http://yeoman.io) generator
 
