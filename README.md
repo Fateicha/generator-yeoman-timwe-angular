@@ -32,13 +32,13 @@ To install generator-yeoman-timwe-angular, run:
 *Ask for permisssion if you don't have it yet.*
 
 ```bash
-git clone https://fatxx@bitbucket.org/fatxx/generator-yeoman-timwe-angular.git
+git clone https://github.com/Fatxx/generator-yeoman-angular
 ```
 
 Then navigate inside that folder:
 
 ```bash
-cd generator-yeoman-timwe-angular
+cd generator-yeoman-angular
 ```
 
 And run:
@@ -50,7 +50,7 @@ npm link
 Finally, go to a desired directory and initiate the generator:
 ```bash
 cd /path/to/your/app/directory
-yo yeoman-timwe-angular
+yo yeoman-angular
 ```
 
 ## License
